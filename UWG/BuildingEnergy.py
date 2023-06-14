@@ -149,7 +149,7 @@ class Building(object):
         volVent = self.vent * self.nFloor               # total ventilation volumetric flow rate per building footprint area [m^3 s^-1 m^-2]
         volInfil = self.infil * UCM.bldHeight / 3600.   # total infiltration volumetric flow rate per building footprint area [m^3 s^-1 m^-2]
         T_wall = BEM.wall.layerTemp[-1]                 # Inner layer
-        massFlorRateSWH = BEM.SWH * self.nFloor/3600.   # Solar water heating per building footprint area per hour [kg s^-1 m^-2] (Change of units [hr^-1] to [s^-1]
+        massFlowRateSWH = BEM.SWH * self.nFloor/3600.   # Solar water heating per building footprint area per hour [kg s^-1 m^-2] (Change of units [hr^-1] to [s^-1]
         T_ceil = BEM.roof.layerTemp[-1]                 # Inner layer
         T_mass = BEM.mass.layerTemp[0]                  # Outer layer
         T_indoor = self.indoorTemp                      # Indoor temp (initial)
@@ -371,9 +371,9 @@ class Building(object):
         # which can be determined from sensible waste to canyon, energy consumption for domestic hot water and gas consumption
         CpH20 = 4200.           # heat capacity of water [J Kg^-1 K^-1]
         T_hot = 49 + 273.15     # Service water temp (assume no storage) [K]
-        self.QWater = (1 / self.heatEff - 1.) * (massFlorRateSWH * CpH20 * (T_hot - forc.waterTemp))
+        self.QWater = (1 / self.heatEff - 1.) * (massFlowRateSWH * CpH20 * (T_hot - forc.waterTemp))
         self.QGas = BEM.Gas * (1 - self.heatEff) * self.nFloor
         self.sensWaste = self.sensWasteCoolHeatDehum + self.QWater + self.QGas
         # Calculate total gas consumption per unit floor area [W m^-2] which is equal to gas consumption per unit floor area +
         # energy consumption for domestic hot water per unit floor area + energy consumption of the heating system per unit floor area
-        self.GasTotal = BEM.Gas + (massFlorRateSWH*CpH20*(T_hot - forc.waterTemp)/self.nFloor)/self.heatEff + self.heatConsump/self.nFloor
+        self.GasTotal = BEM.Gas + (massFlowRateSWH*CpH20*(T_hot - forc.waterTemp)/self.nFloor)/self.heatEff + self.heatConsump/self.nFloor
